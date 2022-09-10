@@ -9,33 +9,32 @@ const Codelock = ({ setIsOpen }) => {
     const generateNumPad = () => {
         // if numpad has been already generated
         if (buttons.length > 1) {
-            return
+            return;
         }
         for (let i = 0; i < 10; i++) {
-            buttons.push(<div className="button" key={i}><p>{i}</p></div>)
+            buttons.push(<div className="button" key={i}><p>{i}</p></div>);
         }
-        // Handles moving "0" button to the end of the number pad component (was in the example this way).
-        // FYI: array.shift() moves first item in array to be the last item in the array.
+        //Moves "0" button to end of button array
         buttons.push(buttons.shift());
     }
     generateNumPad();
 
     const handleInput = (pressedBtn) => {
         let tempInputArr = input;
-        tempInputArr.push(pressedBtn);
-        setInput(tempInputArr)
+        pressedBtn == 10 ? tempInputArr.push(0) : tempInputArr.push(pressedBtn);
+        setInput(tempInputArr);
 
-        // Handles resetting the code if 4 digits have been set. 
-        if ((input.length) === 4) {
-            checkCode(tempInputArr.join(""))
-            setInput([])
+        // Handles resetting the code if 4 digits have been set 
+        if ((input.length) == 4) {
+            checkCode(tempInputArr.join(""));
+            setInput([]);
         }
     }
 
     const checkCode = async (inputCode) => {
         axios.get("http://localhost:3001/checkCode", { params: { inputCode } }).then((response) => {
             if (inputCode == response.data[0].passcode) {
-                console.log("CODE CORRECT!")
+                console.log("CODE CORRECT!");
                 setIsOpen(true);
             }
             else {
